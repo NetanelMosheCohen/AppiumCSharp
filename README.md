@@ -11,5 +11,20 @@ The framework contains:
 - Reading tests data from external file (JSON)
 - Starting Appium server programmatically
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+You can run the tests in CMD by using the following .NET Core command:
+
+For native Android app:
+($env:ASPNETCORE_ENVIRONMENT="Android") | dotnet test -v n
+
+For native iOS app:
+($env:ASPNETCORE_ENVIRONMENT="iOS") | dotnet test -v n
+
+For Android web app:
+($env:ASPNETCORE_ENVIRONMENT="WebAndroid") | dotnet test -v n
+
+For iOS web app:
+($env:ASPNETCORE_ENVIRONMENT="WebIOS") | dotnet test -v n
 
 
