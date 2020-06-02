@@ -13,7 +13,7 @@ The framework contains:
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-You can run the tests in CMD by using the following .NET Core command:
+The tests can be run via CMD by using the following .NET Core command:
 
 For native Android app:  
 ($env:ASPNETCORE_ENVIRONMENT="Android") | dotnet test -v n
