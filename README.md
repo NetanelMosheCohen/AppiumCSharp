@@ -31,4 +31,4 @@
 `($env:ASPNETCORE_ENVIRONMENT="WebIOS") | dotnet test -v n`
 
 
-![alt text](https://github.com/NetanelMosheCohen/AppiumCSharp/blob/master/diamond.jpg?raw=true)
+
