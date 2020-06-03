@@ -3,10 +3,10 @@
 ## **The framework contains:**
 
 - Cross-platform support for running tests on 4 different platforms:
-1. Native Android app
-2. Native iOS app
-3. Android web app
-4. iOS web app
+    1. Native Android app
+    2. Native iOS app
+    3. Android web app
+    4. iOS web app
 - Abstraction layers to be able to run a single test without code changes on all 4 platforms!
 - Platform parameterization using config files
 - Page Object Model design
