@@ -30,6 +30,8 @@
 **For iOS web app:**
 `($env:ASPNETCORE_ENVIRONMENT="WebIOS") | dotnet test -v n`
 
+## **Some screenshots from the project:**
+
 ![alt text](https://github.com/NetanelMosheCohen/AppiumCSharp/blob/master/Demo.PNG?raw=true)
 ![alt text](https://github.com/NetanelMosheCohen/AppiumCSharp/blob/master/SuccessfullRun.PNG?raw=true)
 ![alt text](https://github.com/NetanelMosheCohen/AppiumCSharp/blob/master/FailedRun.PNG?raw=true)
