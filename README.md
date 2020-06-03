@@ -11,7 +11,7 @@
 - Platform parameterization using config files
 - Page Object Model design
 - Tests run report and dashboard using Extent Reports library (including errors, stack trace, screenshots, logging test steps, etc.)
-- Parallel execution on real devices using BrowserStack Cloud
+- Parallel execution on real mobile devices using BrowserStack Cloud
 - Reading tests data from external file (JSON)
 - Managing Appium server programmatically
 
