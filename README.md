@@ -2,15 +2,18 @@
 
 ## **The framework contains:**
 
-- Cross-platform support for running the tests on 4 platforms - Native Android app, native iOS app, Android web app and iOS web app
-- Abstraction layer to run a single test without code changes on all 4 platforms!
+- Cross-platform support for running tests on 4 different platforms:
+1. Native Android app
+2. Native iOS app
+3. Android web app
+4. iOS web app
+- Abstraction layers to be able to run a single test without code changes on all 4 platforms!
 - Platform parameterization using config files
 - Page Object Model design
-- Tests run report and dashboard using Extent Reports library (including screenshots, logging test steps)
+- Tests run report and dashboard using Extent Reports library (including errors, stack trace, screenshots, logging test steps, etc.)
 - Parallel execution on real devices using BrowserStack Cloud
 - Reading tests data from external file (JSON)
-- Starting Appium server programmatically
-
+- Managing Appium server programmatically
 
 
 ## **The tests can be run via CMD by using the following .NET Core command:**
