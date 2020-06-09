@@ -14,6 +14,7 @@
 - Parallel execution on real mobile devices using BrowserStack Cloud
 - Reading tests data from external file (JSON)
 - Managing Appium server programmatically
+- Support for running the project on CI/CD tools such as Jenkins (demonstrated in the video below)
 
 
 ## **The tests can be run via CMD by using the following .NET Core command:**
