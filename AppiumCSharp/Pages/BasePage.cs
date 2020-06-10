@@ -59,13 +59,14 @@ namespace AppiumCSharp
         //This function is useful in case that the cross platform scroll function (SwipeByCooridnates) is not working for iOS device
         public void ScrollIOS(SwipeDirection swipeDirection, By element)
         {
+            int scrollAttempts = 3;
             Dictionary<string, object> args = new Dictionary<string, object>
             {
                 { "direction", swipeDirection.ToString().ToLower() }
             };
             try
             {
-                for (var i = 0; i < 3; i++)
+                for (var i = 0; i < scrollAttempts; i++)
                 {
                     if (!IsElementAppears(element))
                         GetDriver().ExecuteScript("mobile: scroll", args);
@@ -81,6 +82,7 @@ namespace AppiumCSharp
 
         public void SwipeByCooridnates(SwipeDirection swipeDirection, By element)
         {
+            int scrollAttempts = 3;
             int windowWidth = GetDriver().Manage().Window.Size.Width;
             int windowHeight = GetDriver().Manage().Window.Size.Height;
             int startX, endX, startY, endY;
@@ -112,7 +114,7 @@ namespace AppiumCSharp
             }
             try
             {
-                for (var i = 0; i < 3; i++)
+                for (var i = 0; i < scrollAttempts; i++)
                 {
                     if (!IsElementAppears(element))
                         new TouchAction(GetDriver())
