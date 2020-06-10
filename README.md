@@ -32,6 +32,11 @@
 `($env:ASPNETCORE_ENVIRONMENT="WebIOS") | dotnet test -v n`
 
 ## **Some screenshots from the project:**
+A quick demo of the project:
+
+
+
+## **Some screenshots from the project:**
 
 ![alt text](https://github.com/NetanelMosheCohen/AppiumCSharp/blob/master/Demo.PNG?raw=true)
 ![alt text](https://github.com/NetanelMosheCohen/AppiumCSharp/blob/master/SuccessfullRun.PNG?raw=true)
