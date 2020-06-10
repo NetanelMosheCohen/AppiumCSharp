@@ -22,13 +22,13 @@ namespace AppiumCSharp
         private AppiumDriver<IWebElement> GetDriver() => driver.Value;
         AppiumOptions appiumOptions = new AppiumOptions();
         AppiumLocalService appiumLocalService;
+        AppiumServiceBuilder appiumServiceBuilder = new AppiumServiceBuilder();
         Report report = new Report();
         ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
         private readonly string url = Startup.ReadFromAppSettings("AppUrl");
-        private readonly string testDataFile = @"Utils\TestsData.json";
 
-        public LoginPage loginPage;
-        public HomePage homePage;
+        protected LoginPage loginPage;
+        protected HomePage homePage;
 
         //BrowserStack Credentials
         private readonly static string username = "<your_browserstack_username>";
@@ -51,44 +51,16 @@ namespace AppiumCSharp
             switch (platformType)
             {
                 case PlatformType.Android:
-                    appiumOptions.AddAdditionalCapability(MobileCapabilityType.App, Startup.ReadFromAppSettings("App"));
-                    appiumOptions.AddAdditionalCapability("appWaitActivity", Startup.ReadFromAppSettings("AppActivity"));
-                    appiumOptions.AddAdditionalCapability(MobileCapabilityType.DeviceName, Startup.ReadFromAppSettings("DeviceName"));
-                    appiumOptions.AddAdditionalCapability(MobileCapabilityType.PlatformVersion, Startup.ReadFromAppSettings("OSVersion"));
-                    driver.Value = new AndroidDriver<IWebElement>(uri, appiumOptions);
-                    loginPage = new LoginPageNativeAndroid(driver);
-                    homePage = new HomePageNative(driver);
+                    InitNativeAndroidCapabilities();
                     break;
                 case PlatformType.iOS:
-                    appiumOptions.AddAdditionalCapability(MobileCapabilityType.PlatformName, Startup.ReadFromAppSettings("PlatformName"));
-                    appiumOptions.AddAdditionalCapability(MobileCapabilityType.AutomationName, Startup.ReadFromAppSettings("AutomationName"));
-                    appiumOptions.AddAdditionalCapability(MobileCapabilityType.PlatformVersion, Startup.ReadFromAppSettings("PlatformVersion"));
-                    appiumOptions.AddAdditionalCapability(MobileCapabilityType.DeviceName, Startup.ReadFromAppSettings("DeviceName"));
-                    appiumOptions.AddAdditionalCapability(MobileCapabilityType.App, Startup.ReadFromAppSettings("App"));
-                    driver.Value = new IOSDriver<IWebElement>(uri, appiumOptions);
-                    loginPage = new LoginPageNativeIOS(driver);
-                    homePage = new HomePageNative(driver);
+                    InitNativeIOSCapabilities();
                     break;
                 case PlatformType.WebAndroid:
-                    appiumOptions.AddAdditionalCapability(MobileCapabilityType.AutomationName, Startup.ReadFromAppSettings("AutomationName"));
-                    appiumOptions.AddAdditionalCapability(MobileCapabilityType.BrowserName, Startup.ReadFromAppSettings("BrowserName"));
-                    appiumOptions.AddAdditionalCapability(MobileCapabilityType.DeviceName, Startup.ReadFromAppSettings("DeviceName"));
-                    appiumOptions.AddAdditionalCapability(MobileCapabilityType.PlatformVersion, Startup.ReadFromAppSettings("OSVersion"));
-                    appiumOptions.AddAdditionalCapability(ChromeOptions.Capability, JObject.Parse("{'w3c':false}")); //Required because of a bug in Appium C# client                   
-                    driver.Value = new AndroidDriver<IWebElement>(uri, appiumOptions);
-                    loginPage = new LoginPageWeb(driver);
-                    homePage = new HomePageWeb(driver);
-                    NavigateToWebApp();
+                    InitWebAndroidCapabilities();
                     break;
                 case PlatformType.WebIOS:
-                    appiumOptions.AddAdditionalCapability(MobileCapabilityType.AutomationName, Startup.ReadFromAppSettings("AutomationName"));
-                    appiumOptions.AddAdditionalCapability(MobileCapabilityType.BrowserName, Startup.ReadFromAppSettings("BrowserName"));
-                    appiumOptions.AddAdditionalCapability(MobileCapabilityType.PlatformName, Startup.ReadFromAppSettings("PlatformName"));
-                    appiumOptions.AddAdditionalCapability(MobileCapabilityType.DeviceName, Startup.ReadFromAppSettings("DeviceName"));
-                    driver.Value = new IOSDriver<IWebElement>(uri, appiumOptions);
-                    loginPage = new LoginPageWeb(driver);
-                    homePage = new HomePageWeb(driver);
-                    NavigateToWebApp();
+                    InitWebIOSCapabilities();
                     break;
                 default:
                     throw new Exception("No platform selected!");
@@ -96,9 +68,62 @@ namespace AppiumCSharp
             return GetDriver();
         }
 
+        private void InitNativeAndroidCapabilities()
+        {
+            appiumOptions.AddAdditionalCapability(MobileCapabilityType.App, Startup.ReadFromAppSettings("App"));
+            appiumOptions.AddAdditionalCapability("appWaitActivity", Startup.ReadFromAppSettings("AppActivity"));
+            appiumOptions.AddAdditionalCapability(MobileCapabilityType.DeviceName, Startup.ReadFromAppSettings("DeviceName"));
+            appiumOptions.AddAdditionalCapability(MobileCapabilityType.PlatformVersion, Startup.ReadFromAppSettings("OSVersion"));
+            driver.Value = new AndroidDriver<IWebElement>(uri, appiumOptions);
+            loginPage = new LoginPageNativeAndroid(driver);
+            homePage = new HomePageNative(driver);
+        }
+
+        private void InitNativeIOSCapabilities()
+        {
+            appiumOptions.AddAdditionalCapability(MobileCapabilityType.PlatformName, Startup.ReadFromAppSettings("PlatformName"));
+            appiumOptions.AddAdditionalCapability(MobileCapabilityType.AutomationName, Startup.ReadFromAppSettings("AutomationName"));
+            appiumOptions.AddAdditionalCapability(MobileCapabilityType.PlatformVersion, Startup.ReadFromAppSettings("PlatformVersion"));
+            appiumOptions.AddAdditionalCapability(MobileCapabilityType.DeviceName, Startup.ReadFromAppSettings("DeviceName"));
+            appiumOptions.AddAdditionalCapability(MobileCapabilityType.App, Startup.ReadFromAppSettings("App"));
+            driver.Value = new IOSDriver<IWebElement>(uri, appiumOptions);
+            loginPage = new LoginPageNativeIOS(driver);
+            homePage = new HomePageNative(driver);
+        }
+
+        private void InitWebAndroidCapabilities()
+        {
+            appiumOptions.AddAdditionalCapability(MobileCapabilityType.AutomationName, Startup.ReadFromAppSettings("AutomationName"));
+            appiumOptions.AddAdditionalCapability(MobileCapabilityType.BrowserName, Startup.ReadFromAppSettings("BrowserName"));
+            appiumOptions.AddAdditionalCapability(MobileCapabilityType.DeviceName, Startup.ReadFromAppSettings("DeviceName"));
+            appiumOptions.AddAdditionalCapability(MobileCapabilityType.PlatformVersion, Startup.ReadFromAppSettings("OSVersion"));
+            appiumOptions.AddAdditionalCapability(ChromeOptions.Capability, JObject.Parse("{'w3c':false}")); //Required because of a bug in Appium C# client                   
+            driver.Value = new AndroidDriver<IWebElement>(uri, appiumOptions);
+            loginPage = new LoginPageWeb(driver);
+            homePage = new HomePageWeb(driver);
+            NavigateToWebApp();
+        }
+
+        private void InitWebIOSCapabilities()
+        {
+            appiumOptions.AddAdditionalCapability(MobileCapabilityType.AutomationName, Startup.ReadFromAppSettings("AutomationName"));
+            appiumOptions.AddAdditionalCapability(MobileCapabilityType.BrowserName, Startup.ReadFromAppSettings("BrowserName"));
+            appiumOptions.AddAdditionalCapability(MobileCapabilityType.PlatformName, Startup.ReadFromAppSettings("PlatformName"));
+            appiumOptions.AddAdditionalCapability(MobileCapabilityType.DeviceName, Startup.ReadFromAppSettings("DeviceName"));
+            driver.Value = new IOSDriver<IWebElement>(uri, appiumOptions);
+            loginPage = new LoginPageWeb(driver);
+            homePage = new HomePageWeb(driver);
+            NavigateToWebApp();
+        }
+
+
         private void StartAppiumServer()
         {
-            appiumLocalService = AppiumLocalService.BuildDefaultService();
+            string appiumJSPath = Environment.ExpandEnvironmentVariables($"%SystemDrive%/Users/%USERNAME%/AppData/Local/Programs/Appium/resources/app/node_modules/appium/build/lib/main.js");
+            appiumServiceBuilder
+                .WithAppiumJS(new FileInfo(appiumJSPath))
+                .UsingDriverExecutable(new FileInfo(@"C:\Program Files\nodejs\node.exe"));
+            appiumLocalService = appiumServiceBuilder.Build();
             if (!appiumLocalService.IsRunning)
                 appiumLocalService.Start();
         }
@@ -126,7 +151,7 @@ namespace AppiumCSharp
                     if (TestContext.CurrentContext.Result.Outcome != ResultState.Success)
                     {
                         var screenshot = GetDriver().GetScreenshot();
-                        string screenshotPath = $"{Directory.GetCurrentDirectory()}\\{TestContext.CurrentContext.Test.MethodName}.png";
+                        string screenshotPath = $"{TestContext.CurrentContext.Test.MethodName}.png";
                         screenshot.SaveAsFile(screenshotPath);
                         report.SaveScreenshotToReport(screenshotPath);
                     }
@@ -151,7 +176,7 @@ namespace AppiumCSharp
             Report.test.Info($"Browser navigated to {url}");
         }
 
-        private IConfiguration BuildTestDataFile() => configurationBuilder.AddJsonFile(testDataFile).Build();
+        private IConfiguration BuildTestDataFile() => configurationBuilder.AddJsonFile(@"Utils\TestsData.json").Build();
 
         protected string GetData(string value) => BuildTestDataFile().GetSection(value).Value;
 
