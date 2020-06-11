@@ -31,8 +31,7 @@
 **For iOS web app:**
 `($env:ASPNETCORE_ENVIRONMENT="WebIOS") | dotnet test -v n`
 
-## **Some screenshots from the project:**
-A quick demo of the project:  
+## **A quick demo of the project:**  
 https://www.youtube.com/watch?v=cuAlgJhxt_Q
 
 
