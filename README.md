@@ -1,4 +1,4 @@
-# Appium mobile test automation framework using C# + .NET Core 3.1 + NUnit.
+# Mobile Test Automation Framework using Appium + C# + .NET Core 3.1 + NUnit.
 
 ## **The framework contains:**
 
