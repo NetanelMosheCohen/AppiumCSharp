@@ -1,4 +1,4 @@
-# Mobile Test Automation Framework - C# | .NET Core 3.1 | Appium | NUnit | Extent Reports | BrowserStack | Jenkins.
+# Mobile Test Automation Framework - C# | .NET Core 3.1 | Appium | NUnit | Extent Reports | BrowserStack | Jenkins
 
 ## **The framework contains:**
 
