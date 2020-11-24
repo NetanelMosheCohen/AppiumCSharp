@@ -10,13 +10,8 @@ namespace AppiumCSharp
 {
     public class BasePage
     {
-        public BasePage(ThreadLocal<AppiumDriver<IWebElement>> driver)
-        {
-            this.driver = driver;
-        }
-
-        protected ThreadLocal<AppiumDriver<IWebElement>> driver = new ThreadLocal<AppiumDriver<IWebElement>>();
-        protected AppiumDriver<IWebElement> GetDriver() => driver.Value;
+        public static ThreadLocal<AppiumDriver<IWebElement>> driver = new ThreadLocal<AppiumDriver<IWebElement>>();
+        public static AppiumDriver<IWebElement> GetDriver() => driver.Value;
 
         public void ClickOnElement(By element)
         {

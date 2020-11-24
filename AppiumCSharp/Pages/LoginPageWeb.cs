@@ -6,9 +6,6 @@ namespace AppiumCSharp.Pages
 {
     public class LoginPageWeb : LoginPage
     {
-        public LoginPageWeb(ThreadLocal<AppiumDriver<IWebElement>> driver) : base(driver)
-        { }
-
         protected override By UserNameField => By.Id("user-name");
         protected override By PasswordField => By.Id("password");
         protected override By LoginButton => By.ClassName("btn_action");

@@ -1,6 +1,6 @@
 using AppiumCSharp.Pages;
+using AppiumCSharp.Utils;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using OpenQA.Selenium;
@@ -9,7 +9,6 @@ using OpenQA.Selenium.Appium.Android;
 using OpenQA.Selenium.Appium.Enums;
 using OpenQA.Selenium.Appium.iOS;
 using OpenQA.Selenium.Appium.Service;
-using OpenQA.Selenium.Chrome;
 using System;
 using System.IO;
 using System.Threading;
@@ -17,11 +16,10 @@ using System.Threading;
 namespace AppiumCSharp
 {
     public class TestBase
-    {
-        private ThreadLocal<AppiumDriver<IWebElement>> driver = new ThreadLocal<AppiumDriver<IWebElement>>();
-        private AppiumDriver<IWebElement> GetDriver() => driver.Value;
-        AppiumOptions appiumOptions = new AppiumOptions();
+    {      
         AppiumLocalService appiumLocalService;
+        PlatformCapabilities platformCapabilities = new PlatformCapabilities();
+        AppiumOptions appiumOptions = new AppiumOptions();
         AppiumServiceBuilder appiumServiceBuilder = new AppiumServiceBuilder();
         Report report = new Report();
         ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
@@ -51,70 +49,36 @@ namespace AppiumCSharp
             switch (platformType)
             {
                 case PlatformType.Android:
-                    InitNativeAndroidCapabilities();
+                    appiumOptions = platformCapabilities.InitNativeAndroidCapabilities();
+                    BasePage.driver.Value = new AndroidDriver<IWebElement>(uri, appiumOptions);
+                    loginPage = new LoginPageNativeAndroid();
+                    homePage = new HomePageNative();
                     break;
                 case PlatformType.iOS:
-                    InitNativeIOSCapabilities();
+                    appiumOptions = platformCapabilities.InitNativeIOSCapabilities();
+                    BasePage.driver.Value = new IOSDriver<IWebElement>(uri, appiumOptions);
+                    loginPage = new LoginPageNativeIOS();
+                    homePage = new HomePageNative();
                     break;
                 case PlatformType.WebAndroid:
-                    InitWebAndroidCapabilities();
+                    appiumOptions = platformCapabilities.InitWebAndroidCapabilities();
+                    BasePage.driver.Value = new AndroidDriver<IWebElement>(uri, appiumOptions);
+                    loginPage = new LoginPageWeb();
+                    homePage = new HomePageWeb();
+                    NavigateToWebApp();
                     break;
                 case PlatformType.WebIOS:
-                    InitWebIOSCapabilities();
+                    appiumOptions = platformCapabilities.InitWebIOSCapabilities();
+                    BasePage.driver.Value = new IOSDriver<IWebElement>(uri, appiumOptions);
+                    loginPage = new LoginPageWeb();
+                    homePage = new HomePageWeb();
+                    NavigateToWebApp();
                     break;
                 default:
                     throw new Exception("No platform selected!");
             }
-            return GetDriver();
-        }
-
-        private void InitNativeAndroidCapabilities()
-        {
-            appiumOptions.AddAdditionalCapability(MobileCapabilityType.App, Startup.ReadFromAppSettings("App"));
-            appiumOptions.AddAdditionalCapability("appWaitActivity", Startup.ReadFromAppSettings("AppActivity"));
-            appiumOptions.AddAdditionalCapability(MobileCapabilityType.DeviceName, Startup.ReadFromAppSettings("DeviceName"));
-            appiumOptions.AddAdditionalCapability(MobileCapabilityType.PlatformVersion, Startup.ReadFromAppSettings("OSVersion"));
-            driver.Value = new AndroidDriver<IWebElement>(uri, appiumOptions);
-            loginPage = new LoginPageNativeAndroid(driver);
-            homePage = new HomePageNative(driver);
-        }
-
-        private void InitNativeIOSCapabilities()
-        {
-            appiumOptions.AddAdditionalCapability(MobileCapabilityType.PlatformName, Startup.ReadFromAppSettings("PlatformName"));
-            appiumOptions.AddAdditionalCapability(MobileCapabilityType.AutomationName, Startup.ReadFromAppSettings("AutomationName"));
-            appiumOptions.AddAdditionalCapability(MobileCapabilityType.PlatformVersion, Startup.ReadFromAppSettings("PlatformVersion"));
-            appiumOptions.AddAdditionalCapability(MobileCapabilityType.DeviceName, Startup.ReadFromAppSettings("DeviceName"));
-            appiumOptions.AddAdditionalCapability(MobileCapabilityType.App, Startup.ReadFromAppSettings("App"));
-            driver.Value = new IOSDriver<IWebElement>(uri, appiumOptions);
-            loginPage = new LoginPageNativeIOS(driver);
-            homePage = new HomePageNative(driver);
-        }
-
-        private void InitWebAndroidCapabilities()
-        {
-            appiumOptions.AddAdditionalCapability(MobileCapabilityType.AutomationName, Startup.ReadFromAppSettings("AutomationName"));
-            appiumOptions.AddAdditionalCapability(MobileCapabilityType.BrowserName, Startup.ReadFromAppSettings("BrowserName"));
-            appiumOptions.AddAdditionalCapability(MobileCapabilityType.DeviceName, Startup.ReadFromAppSettings("DeviceName"));
-            appiumOptions.AddAdditionalCapability(MobileCapabilityType.PlatformVersion, Startup.ReadFromAppSettings("OSVersion"));
-            appiumOptions.AddAdditionalCapability(ChromeOptions.Capability, JObject.Parse("{'w3c':false}")); //Required because of a bug in Appium C# client                   
-            driver.Value = new AndroidDriver<IWebElement>(uri, appiumOptions);
-            loginPage = new LoginPageWeb(driver);
-            homePage = new HomePageWeb(driver);
-            NavigateToWebApp();
-        }
-
-        private void InitWebIOSCapabilities()
-        {
-            appiumOptions.AddAdditionalCapability(MobileCapabilityType.AutomationName, Startup.ReadFromAppSettings("AutomationName"));
-            appiumOptions.AddAdditionalCapability(MobileCapabilityType.BrowserName, Startup.ReadFromAppSettings("BrowserName"));
-            appiumOptions.AddAdditionalCapability(MobileCapabilityType.PlatformName, Startup.ReadFromAppSettings("PlatformName"));
-            appiumOptions.AddAdditionalCapability(MobileCapabilityType.DeviceName, Startup.ReadFromAppSettings("DeviceName"));
-            driver.Value = new IOSDriver<IWebElement>(uri, appiumOptions);
-            loginPage = new LoginPageWeb(driver);
-            homePage = new HomePageWeb(driver);
-            NavigateToWebApp();
-        }
+            return BasePage.GetDriver();
+        }       
 
 
         private void StartAppiumServer()
@@ -137,20 +101,20 @@ namespace AppiumCSharp
         private void SetUpDriver()
         {
             Enum.TryParse(Startup.ReadFromAppSettings("PlatformType"), out PlatformType platformType);
-            driver.Value = InitializeDriver(platformType);
+            BasePage.driver.Value = InitializeDriver(platformType);
         }
 
-        private void CloseDriver() => GetDriver()?.Quit();
+        private void CloseDriver() => BasePage.GetDriver()?.Quit();
 
         private void AttachScreenshotToTheReport()
         {
             try
             {
-                if (GetDriver() != null)
+                if (BasePage.GetDriver() != null)
                 {
                     if (TestContext.CurrentContext.Result.Outcome != ResultState.Success)
                     {
-                        var screenshot = GetDriver().GetScreenshot();
+                        var screenshot = BasePage.GetDriver().GetScreenshot();
                         string screenshotPath = $"{TestContext.CurrentContext.Test.MethodName}.png";
                         screenshot.SaveAsFile(screenshotPath);
                         report.SaveScreenshotToReport(screenshotPath);
@@ -165,14 +129,14 @@ namespace AppiumCSharp
 
         private void SetLandscapeOrientation()
         {
-            GetDriver().Orientation = ScreenOrientation.Landscape;
+            BasePage.GetDriver().Orientation = ScreenOrientation.Landscape;
             Report.test.Info($"Browser has switched to landscape orientation");
         }
 
         private void NavigateToWebApp()
         {
             SetLandscapeOrientation();
-            GetDriver().Navigate().GoToUrl(url);
+            BasePage.GetDriver().Navigate().GoToUrl(url);
             Report.test.Info($"Browser navigated to {url}");
         }
 

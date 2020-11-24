@@ -6,9 +6,6 @@ namespace AppiumCSharp.Pages
 {
     public abstract class LoginPageNativeCommon : LoginPage
     {
-        public LoginPageNativeCommon(ThreadLocal<AppiumDriver<IWebElement>> driver) : base(driver)
-        { }
-
         protected override By UserNameField => MobileBy.AccessibilityId("test-Username");
         protected override By PasswordField => MobileBy.AccessibilityId("test-Password");
         protected override By LoginButton => MobileBy.AccessibilityId("test-LOGIN");

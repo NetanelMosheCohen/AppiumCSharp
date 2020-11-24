@@ -6,9 +6,6 @@ namespace AppiumCSharp.Pages
 {
     public abstract class LoginPage : BasePage
     {
-        public LoginPage(ThreadLocal<AppiumDriver<IWebElement>> driver) : base(driver)
-        { }
-
         protected abstract By UserNameField { get; }
         protected abstract By PasswordField { get; }
         protected abstract By LoginButton { get; }

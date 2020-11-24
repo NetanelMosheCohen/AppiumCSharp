@@ -6,9 +6,6 @@ namespace AppiumCSharp.Pages
 {
     public class HomePageNative : HomePage
     {
-        public HomePageNative(ThreadLocal<AppiumDriver<IWebElement>> driver) : base(driver)
-        { }
-
         protected override By ProductItem => MobileBy.AccessibilityId("test-Item title");
     }
 }
